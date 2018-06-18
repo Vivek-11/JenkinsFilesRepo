@@ -1,0 +1,23 @@
+node{
+def app
+stage('Clone Repository'){
+git "https://github.com/Vivek-11/DockerFilesRepo.git"
+}
+stage('Build Image'){
+app=docker.build("vivekranjan11/ubuntu")
+}
+
+stage('Test Image'){
+app.inside{
+sh 'echo "Test Passed"'
+}
+}
+
+stage('Push Image To Docker'){
+docker.withRegistry('https://registry.hub.docker.com','credentials'){
+app.push("${env.BUILD_NUMBER}")
+app.push("latest")
+	}
+     }
+}
+//https://github.com/getintodevops/hellonode/blob/master/Jenkinsfile
